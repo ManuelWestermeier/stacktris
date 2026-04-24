@@ -12,6 +12,38 @@
 	<link rel="stylesheet" href="webapp/fancade.css">
 	<link rel="icon" href="favicon.ico">
 	<script src="patch/poki-sdk.js"></script>
+
+	<script>
+		(function () {
+			try {
+				for (let i = 0; i < localStorage.length; i++) {
+					const key = localStorage.key(i);
+					const value = localStorage.getItem(key);
+
+					// Try parsing as number directly
+					let num = Number(value);
+
+					if (!Number.isNaN(num)) {
+						localStorage.setItem(key, String(num * 2));
+						continue;
+					}
+
+					// Try parsing JSON
+					try {
+						const parsed = JSON.parse(value);
+
+						if (typeof parsed === "number") {
+							localStorage.setItem(key, JSON.stringify(parsed * 2));
+						}
+					} catch (_) {
+						// ignore non-JSON
+					}
+				}
+			} catch (e) {
+				console.error("localStorage processing failed:", e);
+			}
+		})();
+	</script>
 </head>
 
 <body id="body">
